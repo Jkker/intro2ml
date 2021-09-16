@@ -1,0 +1,123 @@
+\title{
+Introduction to Machine Learning (CSCI-UA.473): Homework 0
+}
+
+\author{
+Instructor: Sumit Chopra
+}
+
+September 2,2021
+
+\section{Submission Instructions}
+
+You must typeset the answers using LATEX and compile them into a single PDF file. Name the pdf file as: \langleYour-NetID $\rangle_{\text {hw0.pdf. Submit the file on }}$ Brightspace. The due date is September 13th, 2021, 11:59 PM.
+
+\section{Questions}
+
+\section{Probability and Calculus}
+
+\section{Question 1 (10 points)}
+
+Two people take turns trying to sink a basketball into a net. Person 1 succeeds with probability $1 / 3$ and Person 2 succeeds with the probability $1 / 4$. Whoever succeeds first wins the game and the game is over. Assuming that Person 1 takes the first shot, what is the probability that Person 1 wins the game? Please derive your answer.
+
+\section{Question 2 (10 points)}
+
+You know that $1 \%$ of the population have COVID. You also know that $90 \%$ of the people who have COVID get a positive test result and $10 \%$ of people who do not have COVID also test positive. What is the probability that you have COVID given that you tested positive?
+
+Question 3 (10 points)
+
+Let the function $f(x)$ be defined as:
+
+$$
+f(x)=\left\{\begin{array}{cl}
+0 & \text { for } x<0 \\
+\frac{1}{(1+x)} & \text { otherwise }
+\end{array}\right.
+$$
+
+Is $f(x)$ a PDF? If yes, then prove that it is a PDF. If no, then prove that it is not a PDF.
+
+\section{Question 4 (10 points)}
+
+Assume that $X$ and $Y$ are two independent random variables and both have the same density function:
+
+$$
+f(x)=\left\{\begin{array}{cl}
+2 x & \text { if } & 0 \leq x \leq 1 \\
+0 & \text { otherwise }
+\end{array}\right.
+$$
+
+What is the value of $\mathbb{P}(X+Y \leq 1)$ ?
+
+\section{Question 5 (10 points)}
+
+Let $X$ be a random variable which belongs to a Uniform distribution between 0 and $1: X \sim \operatorname{Unif}(0,1)$. Let $Y=g(X)=e^{X}$. What is the value of $\mathbb{E}(Y)$ ?
+
+\section{Question 6 (10 points)}
+
+Suppose that the number of errors per computer program has a Poisson distribution with mean 5 . We have 125 program submissions. Let $X_{1}, X_{2}, \ldots, X_{125}$ denote the number of errors in the programs. What is the value of $\mathbb{P}\left(X_{n}<5.5\right)$ ?
+
+\section{Question 7 (10 points)}
+
+Let $X_{n}=f\left(W_{n}, X_{n-1}\right)$ for $n=1, \ldots, P$, for some function $f() .$ Let us define the value of variable $E$ as
+
+$$
+E=\left\|C-X_{P}\right\|^{2}
+$$
+
+for some constant $C$. What is the value of the gradient $\frac{\partial E}{\partial X_{0}}$ ?
+
+\section{Question 8 (10 points)}
+
+Suppose
+
+$$
+f(x, y)=\frac{\sqrt{x+y}+\sqrt{x-y}}{\sqrt{x+y}-\sqrt{x-y}}+\sqrt{\sqrt{x+y}-\sqrt{x-y}} .
+$$
+
+What is the value of the expression
+
+$$
+2 y \frac{\partial^{2} f}{\partial x^{2}}+4 x \frac{\partial^{2} f}{\partial x \partial y}+2 y \frac{\partial^{2} f}{\partial y^{2}}+2 \frac{\partial f}{\partial y}
+$$
+
+at the point where $x=5$ and $y=4$ ?
+
+\section{Linear Algebra}
+
+\section{Question 9 (10 points)}
+
+What is an Eigen value of a matrix? What is an Eigen Vector of a matrix? Describe one method (any method) you would use to compute both of them. Use the above described method to compute the Eigen Values of the matrix:
+
+$$
+\left[\begin{array}{ccc}
+1 & 0 & -1 \\
+1 & 0 & 0 \\
+-2 & 2 & 1
+\end{array}\right]
+$$
+
+
+
+\section{Question 10 (10 points)}
+
+Let $X=\left(x_{1}, \ldots, x_{k}\right)$ for some fixed $k$, be a random variable whose probability density function is defined as:
+
+$$
+f(x)=\left(\begin{array}{c}
+n \\
+x_{1}, \ldots, x_{k}
+\end{array}\right) p_{1}^{x_{1}}, \ldots, p_{k}^{x_{k}}
+$$
+
+where
+
+$$
+\left(\begin{array}{c}
+n \\
+x_{1}, \ldots, x_{k}
+\end{array}\right)=\frac{n !}{x_{1} !, \ldots x_{k} !}
+$$
+
+Also $p_{j} \geq 0$ for all $j=\{1, \ldots, k\}$ and $\sum_{j=1}^{k} p_{j}=1$. What is the value of $\mathbb{E}(X)$ and $\mathbb{V}(X) ?$
