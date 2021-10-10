@@ -1,0 +1,78 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{mhchem}
+\usepackage{stmaryrd}
+
+\title{Introduction to Machine Learning (CSCI-UA.473): Homework 2 }
+
+
+\author{Instructor: Sumit Chopra}
+\date{\today}
+
+
+\begin{document}
+\maketitle
+
+\section*{Submission Instructions}
+You must typeset the answers using IATEXand compile them into a single PDF file. Name the pdf file as: \textbackslash langleYour-NetID $\rangle$-hw2.pdf. For the programming part of the assignment, complete the Jupyter notebook named HW2.ipynb. Create a ZIP file containing both the PDF file and the completed Jupyter notebook. Name it $\langle\text { Your-NetID }\rangle_{\text {-hw2.zip. Submit the ZIP file on Brightspace. The due }}$ date is October $12^{\text {th }}, \mathbf{2 0 2 1}$, 11:59 PM.
+
+\section*{Theory}
+\subsection*{Question T1: Model Selection (5 points)}
+Consider that we are learning a logistic regression $M^{1}$ and a support vector machine $M^{2}$, and we have partitioned the data into three subsets: $D_{\text {train }}$ (training set), $D_{\text {val }}$ (validation set), and $D_{\text {test }}$ test set. The two models are iteratively optimized on $D_{\text {train }}$ over $T$ steps, and now we have $T$ logistic regression parameter configurations (i.e., weights and biases) $M_{1}^{1}, M_{2}^{1}, \ldots, M_{T}^{1}$ and $T$ support vector configurations $M_{1}^{2}, M_{2}^{2}, \ldots, M_{T}^{2}$ all with different parameters. We now evaluate the expected cost for all the $2 T$ models on training set, validation set, and test set. Thus we have $6 T$ quantities $\mathcal{L}_{\text {train }, t}^{i}, \mathcal{L}_{v a l, t}^{i}$, and $\mathcal{L}_{\text {test }, t}^{i}$ where $i \in\{1,2\}$ and $t \in\{1,2, \ldots, T\}$
+
+\begin{enumerate}
+  \item Which $i$ and $t$ should we pick as the best model and why? (2.5 points)
+
+  \item How should we report the generalization error of the model? ( $2.5$ points)
+
+  \paragraph{Answer:} Generalization error 
+
+
+\end{enumerate}
+\subsection*{Question T2: Gradient of Multi-Class Logistic Regression (10 points)}
+The loss function on a single sample $(x, y)$ for a logistic regression model with parameters $w$ for the multi-class classification problem can be written as
+$$
+\mathcal{L}_{w}(x, y)=-\sum_{j=1}^{K} y_{j} \cdot \log p_{j},
+$$
+where $K$ is the number of classes, $y_{j}$ is the ground truth label corresponding to the $j$-th class for the current sample, and $p_{j}$ is defined as:
+$$
+\begin{aligned}
+p_{j} &=\sigma\left(w^{T} \cdot x\right)_{j} \\
+&=\frac{e^{w_{j}^{T} \cdot x}}{\sum_{j=1}^{K} e^{w_{j}^{T} \cdot x}}
+\end{aligned}
+$$
+The function $\sigma()$ is also called the Softmax and the loss function $\mathcal{L}_{w}$ is called the cross-entropy loss: by far the most popular loss function used to solve multiclass classification tasks.
+
+Compute the gradient of the above loss function with respect to the parameter vector $w$. Show all the steps of the derivation.
+
+\subsection*{Question T3: Maximum Likelihood Estimate of a Gaussian Model (10 Points)}
+Assume you are given a dataset $\mathcal{D}$ of $n$ real numbers $\mathcal{D}=\left\{x_{1}, x_{2}, \ldots, x_{n}\right\}$, where $x_{i} \in \Re, \forall i$. Derive the maximum likelihood estimate of the mean $\mu$ and variance $\sigma$, of the 1 -dimensional Gaussian distribution. Note that $\mu$ and $\sigma$ are the learnable parameters.
+
+\begin{enumerate}
+  \item Write down the expression of the $\log$-likelihood $\mathcal{L}_{\mu, \sigma}(\mathcal{D})$ of the data set $\mathcal{D}$ as a function of $\mu$ and $\sigma$. (2 points)
+
+  \item Compute the partial derivative of $\mathcal{L}_{\mu, \sigma}(\mathcal{D})$ with respect to $\mu$, equate to zero and solve for $\mu$. (4 points)
+
+  \item Compute the partial derivative of $\mathcal{L}_{\mu, \sigma}(\mathcal{D})$ with respect to $\sigma$, equate to zero and solve for $\sigma$. (4 points)
+
+\end{enumerate}
+\subsection*{Question T4: Hinge loss gradients (5 points)}
+Unlike the Cross-Entropy loss, the Hinge loss (defined below), is not differentiable everywhere with respect to the parameters $\theta$ :
+$$
+\mathcal{L}_{\text {Hinge }}(x, y, \theta)=\max \left[0,1-y \cdot f_{\theta}(x)\right],
+$$
+for some parametric function $f_{\theta}$. Does it mean that we cannot use a gradientbased optimization algorithm for finding a solution that minimizes the hinge loss? If not, what can we do about it?
+
+\section*{Practicum}
+See the accompanying Python notebook.
+
+Question P1: Metrics for a binary classifier ( 20 points)
+
+Question P2: Support Vector Machines (50 points)
+
+
+\end{document}
