@@ -6,6 +6,7 @@
 \usepackage{amssymb}
 \usepackage{mhchem}
 \usepackage{stmaryrd}
+\usepackage{physics}
 
 \title{Introduction to Machine Learning (CSCI-UA.473): Homework 2 }
 
@@ -18,18 +19,21 @@
 \maketitle
 
 \section*{Submission Instructions}
-You must typeset the answers using IATEXand compile them into a single PDF file. Name the pdf file as: \textbackslash langleYour-NetID $\rangle$-hw2.pdf. For the programming part of the assignment, complete the Jupyter notebook named HW2.ipynb. Create a ZIP file containing both the PDF file and the completed Jupyter notebook. Name it $\langle\text { Your-NetID }\rangle_{\text {-hw2.zip. Submit the ZIP file on Brightspace. The due }}$ date is October $12^{\text {th }}, \mathbf{2 0 2 1}$, 11:59 PM.
+You must typeset the answers using IATEXand compile them into a single PDF file. Name the pdf file as: $\langle$ Your-NetID $\rangle$-hw2.pdf. For the programming part of the assignment, complete the Jupyter notebook named HW2.ipynb. Create a ZIP file containing both the PDF file and the completed Jupyter notebook. Name it $\langle \text{ Your-NetID }\rangle$-hw2.zip. Submit the ZIP file on Brightspace. The due date is October $12^{\text {th }}, \mathbf{2 0 2 1}$, 11:59 PM.
 
 \section*{Theory}
 \subsection*{Question T1: Model Selection (5 points)}
-Consider that we are learning a logistic regression $M^{1}$ and a support vector machine $M^{2}$, and we have partitioned the data into three subsets: $D_{\text {train }}$ (training set), $D_{\text {val }}$ (validation set), and $D_{\text {test }}$ test set. The two models are iteratively optimized on $D_{\text {train }}$ over $T$ steps, and now we have $T$ logistic regression parameter configurations (i.e., weights and biases) $M_{1}^{1}, M_{2}^{1}, \ldots, M_{T}^{1}$ and $T$ support vector configurations $M_{1}^{2}, M_{2}^{2}, \ldots, M_{T}^{2}$ all with different parameters. We now evaluate the expected cost for all the $2 T$ models on training set, validation set, and test set. Thus we have $6 T$ quantities $\mathcal{L}_{\text {train }, t}^{i}, \mathcal{L}_{v a l, t}^{i}$, and $\mathcal{L}_{\text {test }, t}^{i}$ where $i \in\{1,2\}$ and $t \in\{1,2, \ldots, T\}$
+Consider that we are learning a logistic regression $M^{1}$ and a support vector machine $M^{2}$, and we have partitioned the data into three subsets: $D_{\text {train }}$ (training set), $D_{\text {val }}$ (validation set), and $D_{\text {test }}$ test set. The two models are iteratively optimized on $D_{\text {train }}$ over $T$ steps, and now we have $T$ logistic regression parameter configurations (i.e., weights and biases) $M_{1}^{1}, M_{2}^{1}, \ldots, M_{T}^{1}$ and $T$ support vector configurations $M_{1}^{2}, M_{2}^{2}, \ldots, M_{T}^{2}$ all with different parameters. We now evaluate the expected cost for all the $2 T$ models on training set, validation set, and test set. Thus we have $6 T$ quantities $\mathcal{L}_{\text {train }, t}^{i}, \mathcal{L}_{v a l, t}^{i}$, and $\mathcal{L}_{\text {test}, t}^{i}$ where $i \in\{1,2\}$ and $t \in\{1,2, \ldots, T\}$
 
 \begin{enumerate}
   \item Which $i$ and $t$ should we pick as the best model and why? (2.5 points)
 
+  \paragraph{Answer:} The best model is the one with the lowest weights and biases. For small values of $i$ (at the beginning of the fitting), the model will have higher validation error; while with too many iterations, the model will have higher generalization error due to over-fitting.
+
   \item How should we report the generalization error of the model? ( $2.5$ points)
 
-  \paragraph{Answer:} Generalization error 
+  \paragraph{Answer:} For each model $M^{i}$ where $i \in\{1,2\}$, we compute the error on the test set as the average of the errors on the test set.
+  $$\mathbb{E}[\mathcal{L}_{\text {test}}^{i}] = \frac{1}{T} \sum^T_{t=1} \mathcal{L}_{\text {test}, t}^{i}$$
 
 
 \end{enumerate}
@@ -48,6 +52,39 @@ $$
 The function $\sigma()$ is also called the Softmax and the loss function $\mathcal{L}_{w}$ is called the cross-entropy loss: by far the most popular loss function used to solve multiclass classification tasks.
 
 Compute the gradient of the above loss function with respect to the parameter vector $w$. Show all the steps of the derivation.
+
+\paragraph{Answer:} First compute the gradient of the Softmax function $p_j$ with respect to the parameter $w_i$ and $w_j$ where $i\neq j$:
+\begin{align*}
+  \pdv{p_j}{w_j} &=\pdv{}{w_j}\frac{e^{w_{j}^{T} \cdot x}}{\sum_{j=1}^{K} e^{w_{j}^{T} \cdot x}}\\
+  &=\frac{\pdv{e^{w_{j}^{T} \cdot x}}{w_j}\cdot \sum_{j=1}^{K} e^{w_{j}^{T} \cdot x}-e^{w_{j}^{T} \cdot x} \cdot \sum_{j=1}^{K} \pdv{e^{w_{j}^{T} \cdot x}}{w_j}}{[\sum_{j=1}^{K} e^{w_{j}^{T} \cdot x}]^2}\\
+  &=\frac{x e^{w_{j}^{T} \cdot x } \cdot \sum_{j=1}^{K} e^{w_{j}^{T} \cdot x}-e^{w_{j}^{T} \cdot x} \cdot \sum_{j=1}^{K} x e^{w_{j}^{T} \cdot x }}{[\sum_{j=1}^{K} e^{w_{j}^{T} \cdot x}]^2}\\
+  &=x\frac{e^{w_{j}^{T} \cdot x }}{\sum_{j=1}^{K} e^{w_{j}^{T} \cdot x}}- x \frac{e^{w_{j}^{T} \cdot x} \cdot \sum_{j=1}^{K} e^{w_{j}^{T} \cdot x }}{[\sum_{j=1}^{K} e^{w_{j}^{T} \cdot x}]^2}\\
+  &=x p_{j}- x p^2_{j}\\
+\end{align*}
+\begin{align*}
+  \pdv{p_j}{w_i} &=\pdv{}{w_i}\frac{e^{w_{j}^{T} \cdot x}}{\sum_{j=1}^{K} e^{w_{j}^{T} \cdot x}}\\
+  &=e^{w_{j}^{T} \cdot x} \pdv{\left(\sum_{j=1}^{K} e^{w_{j}^{T} \cdot x}\right)^{-1}}{w_i}\\
+  &=- x e^{w_{j}^{T} \cdot x} e^{w_{i}^{T} \cdot x} \left(\sum_{j=1}^{K} e^{w_{j}^{T} \cdot x}\right)\left(\sum_{i\neq j}^{K} e^{w_{i}^{T} \cdot x}\right)\\
+  &=-x p_j p_i
+\end{align*}
+
+The gradient of the loss function with respect to $w$ is given by:
+
+\begin{align*}
+  \grad_{w}{\mathcal{L}_{w}(x,y)} &=-\pdv{}{w_j}\sum_{i=1}^{K} y_{i} \cdot \log p_{i} \\
+  &=-\sum_{i=1, i\neq j}^{K} y_{i} \pdv{\log p_{i}}{w_j} - y_j \pdv{\log p_{j}}{w_j}  \\
+  &=-\sum_{i=1, i\neq j}^{K} y_{i} p_i^{-1} \pdv{p_{i}}{w_j} - y_j p_j^{-1} \pdv{p_{j}}{w_j}  \\
+  &=\sum_{i=1, i\neq j}^{K} y_{i} p_i^{-1} x p_j p_i - y_j p_j^{-1} (x p_{j}- x p^2_{j})  \\
+  &=\sum_{i=1, i\neq j}^{K} x y_{i} p_j + x y_j p_{j} - x y_j   \\
+  &=x p_j \sum_{i=1}^{K} y_{i} - x y_j   \\
+  &= x p_j - x y_j
+  % &= -\sum_{j=1}^{K} y_{j} \cdot \pdv{}{w} \log \sigma\left(w^{T} \cdot x\right)_{j} \\
+  % &= -\sum_{j=1}^{K} y_{j} \cdot  \frac{\pdv{\sigma\left(w^{T} \cdot x\right)_{j}}{w}}{\sigma\left(w^{T} \cdot x\right)_{j}}{w} \\
+  % &= -\sum_{j=1}^{K} \pdv{}{w} y_{j} \cdot \log{\frac{e^{w_{j}^{T} \cdot x}}{\sum_{j=1}^{K} e^{w_{j}^{T} \cdot x}}}\\
+  % &= -\sum_{j=1}^{K} \pdv{}{w}[y_{j} \cdot \log e^{w_{j}^{T} \cdot x}  - y_{j} \cdot \log \sum_{j=1}^{K} e^{w_{j}^{T} \cdot x}]\\
+  % &= -\sum_{j=1}^{K} \pdv{}{w}[y_{j} (w_{j}^{T} \cdot x) - y_{j} \cdot \log \sum_{j=1}^{K} e^{w_{j}^{T} \cdot x}]\\
+  % &= -\sum_{j=1}^{K} w^T_{j} \cdot y_j \cdot \log e^{w_{j}^{T} \cdot x}  - \pdv{}{w} y_{j} \cdot \log \sum_{j=1}^{K} e^{w_{j}^{T} \cdot x}
+  \end{align*}
 
 \subsection*{Question T3: Maximum Likelihood Estimate of a Gaussian Model (10 Points)}
 Assume you are given a dataset $\mathcal{D}$ of $n$ real numbers $\mathcal{D}=\left\{x_{1}, x_{2}, \ldots, x_{n}\right\}$, where $x_{i} \in \Re, \forall i$. Derive the maximum likelihood estimate of the mean $\mu$ and variance $\sigma$, of the 1 -dimensional Gaussian distribution. Note that $\mu$ and $\sigma$ are the learnable parameters.
