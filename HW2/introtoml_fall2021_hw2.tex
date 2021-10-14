@@ -28,14 +28,14 @@ Consider that we are learning a logistic regression $M^{1}$ and a support vector
 \begin{enumerate}
   \item Which $i$ and $t$ should we pick as the best model and why? (2.5 points)
 
-  \paragraph{Answer:} The best model is the one with the lowest weights and biases. For small values of $i$ (at the beginning of the fitting), the model will have higher validation error; while with too many iterations, the model will have higher generalization error due to over-fitting.
+  \paragraph{Answer:} To access fitness of the models, we can compare $\mathcal{L}_{\text {train}, t}^{1}$ with $\mathcal{L}_{\text {train}, t}^{2}$ and see how the logistic regression model $M^1$ and the SVM model $M^2$ converges. At each step, the model with lower in-sample error better fits the data set.
+
+  However, since the Goal of Machine Learning is to lower the generalization error as much as possible given $D$, we should pick model $M^i_{t^*}$ with the lowest $\mathcal{L}_{v a l, t^*}^{i}$ on the validation set. This is because the validation set is the best way to evaluate the generalization error without polluating the model with the test set.
 
   \item How should we report the generalization error of the model? ( $2.5$ points)
 
-  \paragraph{Answer:} For each model $M^{i}$ where $i \in\{1,2\}$, we compute the error on the test set as the average of the errors on the test set.
-  $$\mathbb{E}[\mathcal{L}_{\text {test}}^{i}] = \frac{1}{T} \sum^T_{t=1} \mathcal{L}_{\text {test}, t}^{i}$$
-
-
+  \paragraph{Answer:}
+  Generalization error for each model $M^i_t$ can be reported as $\mathcal{L}_{\text {test}, t}^{i}$. The test set provides the best evaluation of out-of-sample error because since it contains unseen data points randomly sampled from the same population. To report the overall generalization error, we can take the average of the test set error for each model.
 \end{enumerate}
 \subsection*{Question T2: Gradient of Multi-Class Logistic Regression (10 points)}
 The loss function on a single sample $(x, y)$ for a logistic regression model with parameters $w$ for the multi-class classification problem can be written as
