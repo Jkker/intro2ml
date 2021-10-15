@@ -55,28 +55,31 @@ Compute the gradient of the above loss function with respect to the parameter ve
 
 \paragraph{Answer:} First compute the gradient of the Softmax function $p_j$ with respect to the parameter $w_i$ and $w_j$ where $i\neq j$:
 \begin{align*}
-  \pdv{p_j}{w_j} &=\pdv{}{w_j}\frac{e^{w_{j}^{T} \cdot x}}{\sum_{j=1}^{K} e^{w_{j}^{T} \cdot x}}\\
-  &=\frac{\pdv{e^{w_{j}^{T} \cdot x}}{w_j}\cdot \sum_{j=1}^{K} e^{w_{j}^{T} \cdot x}-e^{w_{j}^{T} \cdot x} \cdot \sum_{j=1}^{K} \pdv{e^{w_{j}^{T} \cdot x}}{w_j}}{[\sum_{j=1}^{K} e^{w_{j}^{T} \cdot x}]^2}\\
-  &=\frac{x e^{w_{j}^{T} \cdot x } \cdot \sum_{j=1}^{K} e^{w_{j}^{T} \cdot x}-e^{w_{j}^{T} \cdot x} \cdot \sum_{j=1}^{K} x e^{w_{j}^{T} \cdot x }}{[\sum_{j=1}^{K} e^{w_{j}^{T} \cdot x}]^2}\\
-  &=x\frac{e^{w_{j}^{T} \cdot x }}{\sum_{j=1}^{K} e^{w_{j}^{T} \cdot x}}- x \frac{e^{w_{j}^{T} \cdot x} \cdot \sum_{j=1}^{K} e^{w_{j}^{T} \cdot x }}{[\sum_{j=1}^{K} e^{w_{j}^{T} \cdot x}]^2}\\
-  &=x p_{j}- x p^2_{j}\\
+  \pdv{p_j}{w_j} &=\pdv{}{w_j}\frac{e^{w_{j}^{T} \cdot x}}{\sum_{k=1}^{K} e^{w_{k}^{T} \cdot x}}\\
+  &=\frac{\pdv{e^{w_{j}^{T} \cdot x}}{w_j}\cdot \sum_{k=1}^{K} e^{w_{k}^{T} \cdot x}-e^{w_{j}^{T} \cdot x} \cdot \sum_{k=1}^{K} \pdv{e^{w_{k}^{T} \cdot x}}{w_j}}{[\sum_{k=1}^{K} e^{w_{k}^{T} \cdot x}]^2}\\
+  % &=\frac{x e^{w_{j}^{T} \cdot x } \cdot \sum_{k=1}^{K} e^{w_{k}^{T} \cdot x}-e^{w_{j}^{T} \cdot x} \cdot \sum_{k=1}^{K} x e^{w_{k}^{T} \cdot x }}{[\sum_{k=1}^{K} e^{w_{k}^{T} \cdot x}]^2}\\
+  &=x\frac{e^{w_{j}^{T} \cdot x }}{\sum_{k=1}^{K} e^{w_{k}^{T} \cdot x}}- \frac{e^{w_{j}^{T} \cdot x} \cdot [\sum_{k\neq j}^{K} 0 + x e^{w_{j}^{T} \cdot x }]}{[\sum_{k=1}^{K} e^{w_{k}^{T} \cdot x}]^2}\\
+  &=x\frac{e^{w_{j}^{T} \cdot x }}{\sum_{k=1}^{K} e^{w_{k}^{T} \cdot x}}- x \frac{e^{w_{j}^{T} \cdot x} \cdot  e^{w_{j}^{T} \cdot x }}{[\sum_{k=1}^{K} e^{w_{k}^{T} \cdot x}]^2}\\
+  &=x p_{j} - x p_j^2\\
 \end{align*}
 \begin{align*}
   \pdv{p_j}{w_i} &=\pdv{}{w_i}\frac{e^{w_{j}^{T} \cdot x}}{\sum_{j=1}^{K} e^{w_{j}^{T} \cdot x}}\\
   &=e^{w_{j}^{T} \cdot x} \pdv{\left(\sum_{j=1}^{K} e^{w_{j}^{T} \cdot x}\right)^{-1}}{w_i}\\
-  &=- x e^{w_{j}^{T} \cdot x} e^{w_{i}^{T} \cdot x} \left(\sum_{j=1}^{K} e^{w_{j}^{T} \cdot x}\right)\left(\sum_{i\neq j}^{K} e^{w_{i}^{T} \cdot x}\right)\\
+  &=-e^{w_{j}^{T} \cdot x} \left(\sum_{j=1}^{K} e^{w_{j}^{T} \cdot x}\right)^{-2} \pdv{e^{w_{i}^{T} \cdot x}}{w_i}\\
+  &=-x\cdot e^{w_{j}^{T} \cdot x}\cdot e^{w_{i}^{T} \cdot x} \left(\sum_{j=1}^{K} e^{w_{j}^{T} \cdot x}\right)^{-2}\\
   &=-x p_j p_i
 \end{align*}
 
 The gradient of the loss function with respect to $w$ is given by:
 
 \begin{align*}
-  \grad_{w}{\mathcal{L}_{w}(x,y)} &=-\pdv{}{w_j}\sum_{i=1}^{K} y_{i} \cdot \log p_{i}\\
-  &=-\sum_{i=1, i\neq j}^{K} y_{i} \pdv{\log p_{i}}{w_j} - y_j \pdv{\log p_{j}}{w_j}\\&=-\sum_{i=1, i\neq j}^{K} y_{i} p_i^{-1} \pdv{p_{i}}{w_j} - y_j p_j^{-1} \pdv{p_{j}}{w_j}  \\
-  &=\sum_{i=1, i\neq j}^{K} y_{i} p_i^{-1} x p_j p_i - y_j p_j^{-1} (x p_{j}- x p^2_{j})\\
+  \grad_{w}{\mathcal{L}_{w}(x,y)} &=-\pdv{}{w_j}\sum_{i=1}^{K} \left[y_{i} \cdot \log p_{i}\right]\\
+  &=-\sum_{i=1, i\neq j}^{K} y_{i} \pdv{\log p_{i}}{w_j} - y_j \pdv{\log p_{j}}{w_j}\\
+  &=-\sum_{i=1, i\neq j}^{K} y_{i} p_i^{-1} \pdv{p_{i}}{w_j} - y_j p_j^{-1} \pdv{p_{j}}{w_j} \\
+  &=\sum_{i=1, i\neq j}^{K} y_{i} p_i^{-1} x p_j p_i - \left[y_j p_j^{-1} (x p_{j} - x p_j^2) \right]\\
   &=\sum_{i=1, i\neq j}^{K} x y_{i} p_j + x y_j p_{j} - x y_j \\
   &=x p_j \sum_{i=1}^{K} y_{i} - x y_j\\
-  &= x p_j - x y_j
+  &= \boxed{x p_j - x y_j}
   \end{align*}
 
 \pagebreak
@@ -91,7 +94,7 @@ Assume you are given a dataset $\mathcal{D}$ of $n$ real numbers $\mathcal{D}=\l
     \mathcal{L}_{\mu, \sigma}(\mathcal{D}) &= \log{\left(\prod_{i=1}^n P(x_i)\right)}\\
     &= \log{\left(\prod_{i=1}^n \frac {1}{\sigma {\sqrt {2\pi }}} e^{-\frac {(x_i-\mu )^{2}}{2\sigma ^{2}}}\right)}\\
     &= \log{\left(\frac {1}{\sigma^n (2\pi)^{n/2}} e^{-\frac{1}{2\sigma^2}\sum_{i=1}^n (x_i-\mu )^{2}}\right)}\\
-    &= -\frac{n}{2}\log{(2\pi \sigma^2)}-\frac{1}{2\sigma^2}\sum_{i=1}^n (x_i-\mu )^{2}\\
+    &= \boxed{-\frac{n}{2}\log{(2\pi \sigma^2)}-\frac{1}{2\sigma^2}\sum_{i=1}^n (x_i-\mu )^{2}}\\
   \end{align*}
 
   \item Compute the partial derivative of $\mathcal{L}_{\mu, \sigma}(\mathcal{D})$ with respect to $\mu$, equate to zero and solve for $\mu$. (4 points)
@@ -105,7 +108,7 @@ Assume you are given a dataset $\mathcal{D}$ of $n$ real numbers $\mathcal{D}=\l
   \begin{align*}
     \frac{1}{\sigma^2} \sum^n_{i=1} (x_i-\mu) = 0\\
     \frac{1}{\sigma^2} \sum^n_{i=1} x_i - \frac{n}{\sigma^2} \mu = 0\\
-    \mu = \frac{1}{n} \sum^n_{i=1} x_i\\
+    \mu = \boxed{\frac{1}{n} \sum^n_{i=1} x_i}\\
   \end{align*}
 
 
@@ -122,7 +125,7 @@ Assume you are given a dataset $\mathcal{D}$ of $n$ real numbers $\mathcal{D}=\l
     \frac{-n\sigma^2 + \sum_{i=1}^n (x_i-\mu )^{2}}{\sigma^3} = 0\\
     -n\sigma^2 + \sum_{i=1}^n (x_i-\mu )^{2} = 0\\
     n\sigma^2 = \sum_{i=1}^n (x_i-\mu )^{2}\\
-    \sigma = \sqrt{\frac{\sum_{i=1}^n (x_i-\mu )^{2}}{n}}\\
+    \sigma = \boxed{\sqrt{\frac{\sum_{i=1}^n (x_i-\mu )^{2}}{n}}}\\
   \end{align*}
 \end{enumerate}
 \subsection*{Question T4: Hinge loss gradients (5 points)}
@@ -132,6 +135,17 @@ $$
 $$
 for some parametric function $f_{\theta}$. Does it mean that we cannot use a gradientbased optimization algorithm for finding a solution that minimizes the hinge loss? If not, what can we do about it?
 
+\paragraph{Answer:} $\mathcal{L}_{\text {Hinge }}(x, y, \theta)$ is differentiable everywhere with respect to $\theta$ except for $x=x^*$ such that $1-y \cdot f_{\theta}(x^*)=0$. Computing the  partial derivatives and subdifferentials gives:
+$$\grad_\theta{\mathcal{L}_{\text {Hinge }}(x, y, \theta)}=\begin{cases}
+  0 &\text{if } y \cdot f_{\theta}(x) > 1\\
+  \left[0, -y\cdot \grad_\theta{f_{\theta}(x)}\right] & \text{if } y \cdot f_{\theta}(x) = 1 \\
+  -y\cdot \grad_\theta{f_{\theta}(x)} & \text{if } y \cdot f_{\theta}(x) < 1
+\end{cases}$$
+Provided that the Hinge loss function is intended to penalize incorrectly classified data points where $y$ and $f_{\theta}(x)$ take different signs, we can consider $(x,y)\in \mathcal{D}$ where $1-y \cdot f_{\theta}(x^*)=0$ a correct classification. To ensure convergence, $\grad_\theta{\mathcal{L}_{\text {Hinge }}(x, y, \theta)}$ is zero for all correctly classified points. Therefore the gradient of the Hinge loss function is given by:
+$$\grad_\theta{\mathcal{L}_{\text {Hinge }}(x, y, \theta)}=\begin{cases}
+  0 &\text{if } y \cdot f_{\theta}(x) \geq 1\\
+  -y\cdot \grad_\theta{f_{\theta}(x)} & \text{if } y \cdot f_{\theta}(x) < 1
+\end{cases}$$
 \section*{Practicum}
 See the accompanying Python notebook.
 
