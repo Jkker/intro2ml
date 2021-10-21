@@ -18,8 +18,8 @@
 \begin{document}
 \maketitle
 
-\section*{Submission Instructions}
-You must typeset the answers using IATEXand compile them into a single PDF file. Name the pdf file as: $\langle$ Your-NetID $\rangle$-hw2.pdf. For the programming part of the assignment, complete the Jupyter notebook named HW2.ipynb. Create a ZIP file containing both the PDF file and the completed Jupyter notebook. Name it $\langle \text{ Your-NetID }\rangle$-hw2.zip. Submit the ZIP file on Brightspace. The due date is October $12^{\text {th }}, \mathbf{2 0 2 1}$, 11:59 PM.
+% \section*{Submission Instructions}
+% You must typeset the answers using IATEXand compile them into a single PDF file. Name the pdf file as: $\langle$ Your-NetID $\rangle$-hw2.pdf. For the programming part of the assignment, complete the Jupyter notebook named HW2.ipynb. Create a ZIP file containing both the PDF file and the completed Jupyter notebook. Name it $\langle \text{ Your-NetID }\rangle$-hw2.zip. Submit the ZIP file on Brightspace. The due date is October $12^{\text {th }}, \mathbf{2 0 2 1}$, 11:59 PM.
 
 \section*{Theory}
 \subsection*{Question T1: Model Selection (5 points)}
@@ -28,14 +28,14 @@ Consider that we are learning a logistic regression $M^{1}$ and a support vector
 \begin{enumerate}
   \item Which $i$ and $t$ should we pick as the best model and why? (2.5 points)
 
-  \paragraph{Answer:} The best model is the one with the lowest weights and biases. For small values of $i$ (at the beginning of the fitting), the model will have higher validation error; while with too many iterations, the model will have higher generalization error due to over-fitting.
+  \paragraph{Answer:} To access fitness of the models, we can compare $\mathcal{L}_{\text {train}, t}^{1}$ with $\mathcal{L}_{\text {train}, t}^{2}$ and see how the logistic regression model $M^1$ and the SVM model $M^2$ converges. At each step, the model with lower in-sample error better fits the data set.
+
+  However, since the Goal of Machine Learning is to lower the generalization error as much as possible given $D$, we should pick model $M^i_{t^*}$ with the lowest $\mathcal{L}_{v a l, t^*}^{i}$ on the validation set. This is because the validation set is the best way to evaluate the generalization error without polluating the model with the test set.
 
   \item How should we report the generalization error of the model? ( $2.5$ points)
 
-  \paragraph{Answer:} For each model $M^{i}$ where $i \in\{1,2\}$, we compute the error on the test set as the average of the errors on the test set.
-  $$\mathbb{E}[\mathcal{L}_{\text {test}}^{i}] = \frac{1}{T} \sum^T_{t=1} \mathcal{L}_{\text {test}, t}^{i}$$
-
-
+  \paragraph{Answer:}
+  Generalization error for each model $M^i_t$ can be reported as $\mathcal{L}_{\text {test}, t}^{i}$. The test set provides the best evaluation of out-of-sample error because since it contains unseen data points randomly sampled from the same population. To report the overall generalization error, we can take the average of the test set error for each model.
 \end{enumerate}
 \subsection*{Question T2: Gradient of Multi-Class Logistic Regression (10 points)}
 The loss function on a single sample $(x, y)$ for a logistic regression model with parameters $w$ for the multi-class classification problem can be written as
@@ -55,47 +55,78 @@ Compute the gradient of the above loss function with respect to the parameter ve
 
 \paragraph{Answer:} First compute the gradient of the Softmax function $p_j$ with respect to the parameter $w_i$ and $w_j$ where $i\neq j$:
 \begin{align*}
-  \pdv{p_j}{w_j} &=\pdv{}{w_j}\frac{e^{w_{j}^{T} \cdot x}}{\sum_{j=1}^{K} e^{w_{j}^{T} \cdot x}}\\
-  &=\frac{\pdv{e^{w_{j}^{T} \cdot x}}{w_j}\cdot \sum_{j=1}^{K} e^{w_{j}^{T} \cdot x}-e^{w_{j}^{T} \cdot x} \cdot \sum_{j=1}^{K} \pdv{e^{w_{j}^{T} \cdot x}}{w_j}}{[\sum_{j=1}^{K} e^{w_{j}^{T} \cdot x}]^2}\\
-  &=\frac{x e^{w_{j}^{T} \cdot x } \cdot \sum_{j=1}^{K} e^{w_{j}^{T} \cdot x}-e^{w_{j}^{T} \cdot x} \cdot \sum_{j=1}^{K} x e^{w_{j}^{T} \cdot x }}{[\sum_{j=1}^{K} e^{w_{j}^{T} \cdot x}]^2}\\
-  &=x\frac{e^{w_{j}^{T} \cdot x }}{\sum_{j=1}^{K} e^{w_{j}^{T} \cdot x}}- x \frac{e^{w_{j}^{T} \cdot x} \cdot \sum_{j=1}^{K} e^{w_{j}^{T} \cdot x }}{[\sum_{j=1}^{K} e^{w_{j}^{T} \cdot x}]^2}\\
-  &=x p_{j}- x p^2_{j}\\
+  \pdv{p_j}{w_j} &=\pdv{}{w_j}\frac{e^{w_{j}^{T} \cdot x}}{\sum_{k=1}^{K} e^{w_{k}^{T} \cdot x}}\\
+  &=\frac{\pdv{e^{w_{j}^{T} \cdot x}}{w_j}\cdot \sum_{k=1}^{K} e^{w_{k}^{T} \cdot x}-e^{w_{j}^{T} \cdot x} \cdot \sum_{k=1}^{K} \pdv{e^{w_{k}^{T} \cdot x}}{w_j}}{[\sum_{k=1}^{K} e^{w_{k}^{T} \cdot x}]^2}\\
+  % &=\frac{x e^{w_{j}^{T} \cdot x } \cdot \sum_{k=1}^{K} e^{w_{k}^{T} \cdot x}-e^{w_{j}^{T} \cdot x} \cdot \sum_{k=1}^{K} x e^{w_{k}^{T} \cdot x }}{[\sum_{k=1}^{K} e^{w_{k}^{T} \cdot x}]^2}\\
+  &=x\frac{e^{w_{j}^{T} \cdot x }}{\sum_{k=1}^{K} e^{w_{k}^{T} \cdot x}}- \frac{e^{w_{j}^{T} \cdot x} \cdot [\sum_{k\neq j}^{K} 0 + x e^{w_{j}^{T} \cdot x }]}{[\sum_{k=1}^{K} e^{w_{k}^{T} \cdot x}]^2}\\
+  &=x\frac{e^{w_{j}^{T} \cdot x }}{\sum_{k=1}^{K} e^{w_{k}^{T} \cdot x}}- x \frac{e^{w_{j}^{T} \cdot x} \cdot  e^{w_{j}^{T} \cdot x }}{[\sum_{k=1}^{K} e^{w_{k}^{T} \cdot x}]^2}\\
+  &=x p_{j} - x p_j^2\\
 \end{align*}
 \begin{align*}
   \pdv{p_j}{w_i} &=\pdv{}{w_i}\frac{e^{w_{j}^{T} \cdot x}}{\sum_{j=1}^{K} e^{w_{j}^{T} \cdot x}}\\
   &=e^{w_{j}^{T} \cdot x} \pdv{\left(\sum_{j=1}^{K} e^{w_{j}^{T} \cdot x}\right)^{-1}}{w_i}\\
-  &=- x e^{w_{j}^{T} \cdot x} e^{w_{i}^{T} \cdot x} \left(\sum_{j=1}^{K} e^{w_{j}^{T} \cdot x}\right)\left(\sum_{i\neq j}^{K} e^{w_{i}^{T} \cdot x}\right)\\
+  &=-e^{w_{j}^{T} \cdot x} \left(\sum_{j=1}^{K} e^{w_{j}^{T} \cdot x}\right)^{-2} \pdv{e^{w_{i}^{T} \cdot x}}{w_i}\\
+  &=-x\cdot e^{w_{j}^{T} \cdot x}\cdot e^{w_{i}^{T} \cdot x} \left(\sum_{j=1}^{K} e^{w_{j}^{T} \cdot x}\right)^{-2}\\
   &=-x p_j p_i
 \end{align*}
 
 The gradient of the loss function with respect to $w$ is given by:
 
 \begin{align*}
-  \grad_{w}{\mathcal{L}_{w}(x,y)} &=-\pdv{}{w_j}\sum_{i=1}^{K} y_{i} \cdot \log p_{i} \\
-  &=-\sum_{i=1, i\neq j}^{K} y_{i} \pdv{\log p_{i}}{w_j} - y_j \pdv{\log p_{j}}{w_j}  \\
-  &=-\sum_{i=1, i\neq j}^{K} y_{i} p_i^{-1} \pdv{p_{i}}{w_j} - y_j p_j^{-1} \pdv{p_{j}}{w_j}  \\
-  &=\sum_{i=1, i\neq j}^{K} y_{i} p_i^{-1} x p_j p_i - y_j p_j^{-1} (x p_{j}- x p^2_{j})  \\
-  &=\sum_{i=1, i\neq j}^{K} x y_{i} p_j + x y_j p_{j} - x y_j   \\
-  &=x p_j \sum_{i=1}^{K} y_{i} - x y_j   \\
-  &= x p_j - x y_j
-  % &= -\sum_{j=1}^{K} y_{j} \cdot \pdv{}{w} \log \sigma\left(w^{T} \cdot x\right)_{j} \\
-  % &= -\sum_{j=1}^{K} y_{j} \cdot  \frac{\pdv{\sigma\left(w^{T} \cdot x\right)_{j}}{w}}{\sigma\left(w^{T} \cdot x\right)_{j}}{w} \\
-  % &= -\sum_{j=1}^{K} \pdv{}{w} y_{j} \cdot \log{\frac{e^{w_{j}^{T} \cdot x}}{\sum_{j=1}^{K} e^{w_{j}^{T} \cdot x}}}\\
-  % &= -\sum_{j=1}^{K} \pdv{}{w}[y_{j} \cdot \log e^{w_{j}^{T} \cdot x}  - y_{j} \cdot \log \sum_{j=1}^{K} e^{w_{j}^{T} \cdot x}]\\
-  % &= -\sum_{j=1}^{K} \pdv{}{w}[y_{j} (w_{j}^{T} \cdot x) - y_{j} \cdot \log \sum_{j=1}^{K} e^{w_{j}^{T} \cdot x}]\\
-  % &= -\sum_{j=1}^{K} w^T_{j} \cdot y_j \cdot \log e^{w_{j}^{T} \cdot x}  - \pdv{}{w} y_{j} \cdot \log \sum_{j=1}^{K} e^{w_{j}^{T} \cdot x}
+  \grad_{w}{\mathcal{L}_{w}(x,y)} &=-\pdv{}{w_j}\sum_{i=1}^{K} \left[y_{i} \cdot \log p_{i}\right]\\
+  &=-\sum_{i=1, i\neq j}^{K} y_{i} \pdv{\log p_{i}}{w_j} - y_j \pdv{\log p_{j}}{w_j}\\
+  &=-\sum_{i=1, i\neq j}^{K} y_{i} p_i^{-1} \pdv{p_{i}}{w_j} - y_j p_j^{-1} \pdv{p_{j}}{w_j} \\
+  &=\sum_{i=1, i\neq j}^{K} y_{i} p_i^{-1} x p_j p_i - \left[y_j p_j^{-1} (x p_{j} - x p_j^2) \right]\\
+  &=\sum_{i=1, i\neq j}^{K} x y_{i} p_j + x y_j p_{j} - x y_j \\
+  &=x p_j \sum_{i=1}^{K} y_{i} - x y_j\\
+  &= \boxed{x p_j - x y_j}
   \end{align*}
 
+\pagebreak
 \subsection*{Question T3: Maximum Likelihood Estimate of a Gaussian Model (10 Points)}
-Assume you are given a dataset $\mathcal{D}$ of $n$ real numbers $\mathcal{D}=\left\{x_{1}, x_{2}, \ldots, x_{n}\right\}$, where $x_{i} \in \Re, \forall i$. Derive the maximum likelihood estimate of the mean $\mu$ and variance $\sigma$, of the 1 -dimensional Gaussian distribution. Note that $\mu$ and $\sigma$ are the learnable parameters.
+Assume you are given a dataset $\mathcal{D}$ of $n$ real numbers $\mathcal{D}=\left\{x_{1}, x_{2}, \ldots, x_{n}\right\}$, where $x_{i} \in \Re, \forall i$. Derive the maximum likelihood estimate of the mean $\mu$ and variance $\sigma$, of the 1-dimensional Gaussian distribution. Note that $\mu$ and $\sigma$ are the learnable parameters.
 
 \begin{enumerate}
   \item Write down the expression of the $\log$-likelihood $\mathcal{L}_{\mu, \sigma}(\mathcal{D})$ of the data set $\mathcal{D}$ as a function of $\mu$ and $\sigma$. (2 points)
+  \paragraph{Answer:}
+  $$P(x_i) = \frac {1}{\sigma {\sqrt {2\pi }}} e^{-\frac {(x_i-\mu )^{2}}{2\sigma ^{2}}}$$
+  \begin{align*}
+    \mathcal{L}_{\mu, \sigma}(\mathcal{D}) &= \log{\left(\prod_{i=1}^n P(x_i)\right)}\\
+    &= \log{\left(\prod_{i=1}^n \frac {1}{\sigma {\sqrt {2\pi }}} e^{-\frac {(x_i-\mu )^{2}}{2\sigma ^{2}}}\right)}\\
+    &= \log{\left(\frac {1}{\sigma^n (2\pi)^{n/2}} e^{-\frac{1}{2\sigma^2}\sum_{i=1}^n (x_i-\mu )^{2}}\right)}\\
+    &= \boxed{-\frac{n}{2}\log{(2\pi \sigma^2)}-\frac{1}{2\sigma^2}\sum_{i=1}^n (x_i-\mu )^{2}}\\
+  \end{align*}
 
   \item Compute the partial derivative of $\mathcal{L}_{\mu, \sigma}(\mathcal{D})$ with respect to $\mu$, equate to zero and solve for $\mu$. (4 points)
+  \paragraph{Answer:}
+  \begin{align*}
+    \pdv{\mathcal{L}_{\mu, \sigma}(\mathcal{D})}{\mu } &= -\frac{1}{2\sigma^2}\pdv{}{\mu}\sum_{i=1}^n (x_i-\mu )^{2} \\
+    &= -\frac{1}{2\sigma^2}\sum_{i=1}^n -2(x_i-\mu ) \\
+    &= \frac{1}{\sigma^2} \sum^n_{i=1} (x_i-\mu) \\
+  \end{align*}
+  Let $\pdv{\mathcal{L}_{\mu, \sigma}(\mathcal{D})}{\mu }=0$ and solve for $\mu$:
+  \begin{align*}
+    \frac{1}{\sigma^2} \sum^n_{i=1} (x_i-\mu) = 0\\
+    \frac{1}{\sigma^2} \sum^n_{i=1} x_i - \frac{n}{\sigma^2} \mu = 0\\
+    \mu = \boxed{\frac{1}{n} \sum^n_{i=1} x_i}\\
+  \end{align*}
+
 
   \item Compute the partial derivative of $\mathcal{L}_{\mu, \sigma}(\mathcal{D})$ with respect to $\sigma$, equate to zero and solve for $\sigma$. (4 points)
-
+  \paragraph{Answer:}
+  \begin{align*}
+    \pdv{\mathcal{L}_{\mu, \sigma}(\mathcal{D})}{\sigma } &= \pdv{}{\sigma} \left(-\frac{n}{2}\log{(2\pi \sigma^2)}-\frac{1}{2\sigma^2}\sum_{i=1}^n (x_i-\mu )^{2}\right)\\
+    &= -\frac{n}{2}\pdv{}{\sigma}\log{(2\pi \sigma^2)}-\pdv{}{\sigma}\frac{1}{2\sigma^2}\sum_{i=1}^n (x_i-\mu )^{2}\\
+     &= -\frac{n}{\sigma} + \frac{1}{\sigma^3}\sum_{i=1}^n (x_i-\mu )^{2}
+  \end{align*}
+  Let $\pdv{\mathcal{L}_{\mu, \sigma}(\mathcal{D})}{\sigma}=0$ and solve for $\sigma$:
+  \begin{align*}
+    -\frac{n}{\sigma} + \frac{1}{\sigma^3}\sum_{i=1}^n (x_i-\mu )^{2} = 0\\
+    \frac{-n\sigma^2 + \sum_{i=1}^n (x_i-\mu )^{2}}{\sigma^3} = 0\\
+    -n\sigma^2 + \sum_{i=1}^n (x_i-\mu )^{2} = 0\\
+    n\sigma^2 = \sum_{i=1}^n (x_i-\mu )^{2}\\
+    \sigma = \boxed{\sqrt{\frac{\sum_{i=1}^n (x_i-\mu )^{2}}{n}}}\\
+  \end{align*}
 \end{enumerate}
 \subsection*{Question T4: Hinge loss gradients (5 points)}
 Unlike the Cross-Entropy loss, the Hinge loss (defined below), is not differentiable everywhere with respect to the parameters $\theta$ :
@@ -104,6 +135,17 @@ $$
 $$
 for some parametric function $f_{\theta}$. Does it mean that we cannot use a gradientbased optimization algorithm for finding a solution that minimizes the hinge loss? If not, what can we do about it?
 
+\paragraph{Answer:} $\mathcal{L}_{\text {Hinge }}(x, y, \theta)$ is differentiable everywhere with respect to $\theta$ except for $x=x^*$ such that $1-y \cdot f_{\theta}(x^*)=0$. Computing the  partial derivatives and subdifferentials gives:
+$$\grad_\theta{\mathcal{L}_{\text {Hinge }}(x, y, \theta)}=\begin{cases}
+  0 &\text{if } y \cdot f_{\theta}(x) > 1\\
+  \left[0, -y\cdot \grad_\theta{f_{\theta}(x)}\right] & \text{if } y \cdot f_{\theta}(x) = 1 \\
+  -y\cdot \grad_\theta{f_{\theta}(x)} & \text{if } y \cdot f_{\theta}(x) < 1
+\end{cases}$$
+Provided that the Hinge loss function is intended to penalize incorrectly classified data points where $y$ and $f_{\theta}(x)$ take different signs, we can consider $(x,y)\in \mathcal{D}$ where $1-y \cdot f_{\theta}(x^*)=0$ a correct classification. To ensure convergence, $\grad_\theta{\mathcal{L}_{\text {Hinge }}(x, y, \theta)}$ is zero for all correctly classified points. Therefore the gradient of the Hinge loss function is given by:
+$$\grad_\theta{\mathcal{L}_{\text {Hinge }}(x, y, \theta)}=\begin{cases}
+  0 &\text{if } y \cdot f_{\theta}(x) \geq 1\\
+  -y\cdot \grad_\theta{f_{\theta}(x)} & \text{if } y \cdot f_{\theta}(x) < 1
+\end{cases}$$
 \section*{Practicum}
 See the accompanying Python notebook.
 
