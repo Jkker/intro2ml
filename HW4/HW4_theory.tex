@@ -1,0 +1,60 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{mhchem}
+\usepackage{stmaryrd}
+
+\title{Introduction to Machine Learning (CSCI-UA.473): Homework 4 }
+
+
+\author{Instructor: Sumit Chopra}
+\date{}
+
+
+\begin{document}
+\maketitle
+
+November $4^{\text {th }}, 2021$
+
+\section*{Submission Instructions }
+You must typeset the answers using IATEXand compile them into a single PDF file. Name the pdf file as: $\langle\text { Your-NetID }\rangle_{-}$hw 4.pdf. For the programming part of the assignment, complete the Jupyter notebook named HW4.ipynb. Create a ZIP file containing both the PDF file and the completed Jupyter notebook. Name it $\langle\text { Your-NetID }\rangle_{-}$hw 4 .zip. Submit the ZIP file on Brightspace. The due date is November $18^{t h}, 2021,11: 59$ PM.
+
+\section{Theory}
+\section{Question T1: Back propagation of a 2D Convolution Op- eration ( 15 points)}
+Let the input be an $2 \mathrm{D}$ gray scale image of size $m \times n$, denoted by the matrix $X \in \Re^{m \times n}$. Let the parameters of the $p \times p$ convolution kernel be denoted by $[W, b]$, where $W \in \Re^{p} \times p$ are the weights of the kernel and $b$ is the bias associated with the kernel. Let us denote by $L$ the loss function of your model and by $\delta$ the gradient of the loss with respect to the output of the convolution operation. Write the expression for the following:
+
+\begin{enumerate}
+  \item (5 points) Gradient of the loss function $L$ with respect to the inputs $X$ : $\frac{d L}{d X}$
+
+  \item (5 points) Gradient of the loss function $L$ with respect to the weights $W$ : $\frac{d L}{d W}$
+
+  \item (5 points) Gradient of the loss function $L$ with respect to the bias $b: \frac{d L}{d b}$
+
+\end{enumerate}
+Please write all the steps that led you to the final expression. No points will be given if only the final expression is provided without the steps
+
+\section{Question T2: Back propagation of other functions ( 15 points)}
+Compute the back propagation expression (the gradient of the loss function $L$ with respect to the input $x$, where $x \in \Re^{d}$ is the $1 \mathrm{D}$ input vector of size $d$ ), for the following functions:
+
+\begin{enumerate}
+  \item (5 points) Tanh: $f(x)=\tanh (x)=\frac{e^{x}-e^{-x}}{e^{x}+e^{-x}}$
+
+  \item (5 points) Max pooling: $f(x)=\max _{i \in\{1, \ldots, d\}} x_{i}$
+
+  \item (5 points) Average pooling: $f(x)=\frac{1}{d} \sum_{i=1}^{d} x_{i}$
+
+\end{enumerate}
+Here again, assume that you know the gradient of the loss $L$ with respect to the output of each function and denote it by $\delta$. Please write all the steps that led you to the final expression. No points will be given if only the final expression is provided without the steps.
+
+\section{Practicum}
+See the accompanying Python notebook.
+
+Question P1: Long-Short Term Memory Networks for sequence modeling ( 35 points)
+
+Question P2: Ensemble of neural networks for multi-class classification (35 points)
+
+
+\end{document}
