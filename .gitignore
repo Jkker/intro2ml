@@ -171,3 +171,5 @@ misc/
 *.fls
 *.log
 *.synctex.gz
+
+*.pt
