@@ -6,6 +6,7 @@
 \usepackage{amssymb}
 \usepackage{mhchem}
 \usepackage{stmaryrd}
+\usepackage{physics}
 
 \title{Introduction to Machine Learning (CSCI-UA.473): Homework 4 }
 
@@ -17,44 +18,214 @@
 \begin{document}
 \maketitle
 
-November $4^{\text {th }}, 2021$
+\section*{Theory}
+\subsection*{Question T1: Back propagation of a 2D Convolution Op- eration ( 15 points)}
+Let the input be an $2 \mathrm{D}$ gray scale image of size $m \times n$, denoted by the matrix $X \in \mathbb{R}^{m \times n}$. Let the parameters of the $p \times p$ convolution kernel be denoted by $[W, b]$, where $W \in \mathbb{R}^{p \times p}$ are the weights of the kernel and $b$ is the bias associated with the kernel. Let us denote by $L$ the loss function of your model and by $\delta$ the gradient of the loss with respect to the output of the convolution operation. Write the expression for the following:
 
-\section*{Submission Instructions }
-You must typeset the answers using IATEXand compile them into a single PDF file. Name the pdf file as: $\langle\text { Your-NetID }\rangle_{-}$hw 4.pdf. For the programming part of the assignment, complete the Jupyter notebook named HW4.ipynb. Create a ZIP file containing both the PDF file and the completed Jupyter notebook. Name it $\langle\text { Your-NetID }\rangle_{-}$hw 4 .zip. Submit the ZIP file on Brightspace. The due date is November $18^{t h}, 2021,11: 59$ PM.
+\paragraph{1. (5 points) Gradient of the loss function $L$ with respect to the inputs $X$ : $\frac{d L}{d X}$}
+\subparagraph{Answer: }
 
-\section{Theory}
-\section{Question T1: Back propagation of a 2D Convolution Op- eration ( 15 points)}
-Let the input be an $2 \mathrm{D}$ gray scale image of size $m \times n$, denoted by the matrix $X \in \Re^{m \times n}$. Let the parameters of the $p \times p$ convolution kernel be denoted by $[W, b]$, where $W \in \Re^{p} \times p$ are the weights of the kernel and $b$ is the bias associated with the kernel. Let us denote by $L$ the loss function of your model and by $\delta$ the gradient of the loss with respect to the output of the convolution operation. Write the expression for the following:
+\begin{align*}
+  % z &=W\cdot X+b\\
+  % a &= \sigma(z)\\
+  y &=W\cdot X+b\\
+  L &= \frac{1}{N}\sum_{j=1}^{N}(y_j-t_j)^2
+\end{align*}
 
-\begin{enumerate}
-  \item (5 points) Gradient of the loss function $L$ with respect to the inputs $X$ : $\frac{d L}{d X}$
+By Chain Rule, we have:
+\begin{align*}
+  \pdv{y}{X}&=W\\
+  \pdv{L}{y}&=\frac{1}{N}\sum_{j=1}^{N}\pdv{(y_j-t_j)^2}{y_j} =\frac{2}{N}\sum_{j=1}^{N}(y_j-t_j)\\
+  \pdv{L} {X}&= \pdv{L}{y}\cdot \pdv{y}{X} =\frac{2}{N}\left[\sum_{j=1}^{N}(y_j-t_j)\right]W\\
+  &=\frac{2}{N}\left[\sum_{j=1}^{N}(W_i\cdot x_i + b_i-t_j)\right]W
+\end{align*}
 
-  \item (5 points) Gradient of the loss function $L$ with respect to the weights $W$ : $\frac{d L}{d W}$
 
-  \item (5 points) Gradient of the loss function $L$ with respect to the bias $b: \frac{d L}{d b}$
 
-\end{enumerate}
+\paragraph{2. (5 points) Gradient of the loss function $L$ with respect to the weights $W$ : $\frac{d L}{d W}$}
+\subparagraph{Answer: }
+\begin{align*}
+  % z &=W\cdot X+b\\
+  % a &= \sigma(z)\\
+  y &=W\cdot X+b\\
+  L &= \frac{1}{N}\sum_{j=1}^{N}(y_j-t_j)^2
+\end{align*}
+
+By Chain Rule, we have:
+\begin{align*}
+  \pdv{y}{W}&=X^T\\
+  \pdv{L}{y}&=\frac{1}{N}\sum_{j=1}^{N}\pdv{(y_j-t_j)^2}{y_j} =\frac{2}{N}\sum_{j=1}^{N}(y_j-t_j)\\
+  \pdv{L} {W}&= \pdv{L}{y}\cdot \pdv{y}{W} =\frac{2}{N}\sum_{j=1}^{N}(y_j-t_j)x_j\\
+  &=\frac{2}{N}\sum_{j=1}^{N}(W_i\cdot x_i + b_i-t_j)x_j
+\end{align*}
+
+
+\paragraph{3. (5 points) Gradient of the loss function $L$ with respect to the bias $b: \frac{d L}{d b}$}
+\subparagraph{Answer: }
+\begin{align*}
+  \pdv{y}{b}&=1\\
+  \pdv{L}{y}&=\frac{1}{N}\sum_{j=1}^{N}\pdv{(y_j-t_j)^2}{y_j} =\frac{2}{N}\sum_{j=1}^{N}(y_j-t_j)\\
+  \pdv{L} {b}&= \pdv{L}{y}\cdot \pdv{y}{b} =\frac{2}{N}\sum_{j=1}^{N}(y_j-t_j)\\
+  &=\frac{2}{N}\sum_{j=1}^{N}(W_i\cdot x_i + b_i-t_j)
+\end{align*}
+
+
 Please write all the steps that led you to the final expression. No points will be given if only the final expression is provided without the steps
 
-\section{Question T2: Back propagation of other functions ( 15 points)}
-Compute the back propagation expression (the gradient of the loss function $L$ with respect to the input $x$, where $x \in \Re^{d}$ is the $1 \mathrm{D}$ input vector of size $d$ ), for the following functions:
+\subsection*{Question T2: Back propagation of other functions ( 15 points)}
+Compute the back propagation expression (the gradient of the loss function $L$ with respect to the input $x$, where $x \in \mathbb{R}^{d}$ is the $1 \mathrm{D}$ input vector of size $d$ ), for the following functions:
 
-\begin{enumerate}
-  \item (5 points) Tanh: $f(x)=\tanh (x)=\frac{e^{x}-e^{-x}}{e^{x}+e^{-x}}$
+\paragraph{1. (5 points) Tanh: $f(x)=\tanh (x)=\frac{e^{x}-e^{-x}}{e^{x}+e^{-x}}$}
 
-  \item (5 points) Max pooling: $f(x)=\max _{i \in\{1, \ldots, d\}} x_{i}$
+\subparagraph{Answer: }
 
-  \item (5 points) Average pooling: $f(x)=\frac{1}{d} \sum_{i=1}^{d} x_{i}$
+$$f'(x)=\dv{f}{x} = \dv{\tanh (x)}{x} = 1-\tanh^2 (x)$$
 
-\end{enumerate}
-Here again, assume that you know the gradient of the loss $L$ with respect to the output of each function and denote it by $\delta$. Please write all the steps that led you to the final expression. No points will be given if only the final expression is provided without the steps.
 
-\section{Practicum}
-See the accompanying Python notebook.
+General Case:
 
-Question P1: Long-Short Term Memory Networks for sequence modeling ( 35 points)
+% \begin{align*}
+%   z_j^{(l)} &= \sum_{k=1}^{N^{(l-1)}} w_{jk}^{(l-1)} a_k^{(l-1)} + b_j^{(l-1)} \\
+%   a_j^{(l)}&=f(z_j^{(l)})\\
+%   L^{(l)} &= \frac{1}{N^{(l)}}{\sum_{j=1}^{N^{(l)}}(a_j^{(l)}-y_j)^2}
+% \end{align*}
 
-Question P2: Ensemble of neural networks for multi-class classification (35 points)
+\begin{align*}
+  a_k &= w_{kj}\cdot z_j + b_j\\
+  z_k &= f(a_k) = f(w_{kj}\cdot z_j + b_j)\\
+  L &\approx \frac{1}{2}\sum_{j=1}^{N}(a_j-y_j)^2
+\end{align*}
+
+Derivation gives:
+
+% \begin{align*}
+% \frac{\partial L}{\partial a^{(l)}}&=2(a^{(l)}-y)\\
+% \frac{\partial a^{(l)}}{\partial z^{(l)}} &=f'({z}^{(l)})=1-\tanh^2({z}^{(l)})\\
+% \frac{\partial z^{(l)}}{\partial w^{(l)}}&=a^{(l-1)}
+% \end{align*}
+
+\begin{align*}
+  \pdv{L_n}{a_k} &= \delta_k\\
+  % \pdv{z_k}{w_k} &= a_{j}}\\
+  \pdv{a_k}{w_{kj}} &= z_{j}\\
+  \pdv{a_k}{z_j} &= w_{kj}
+\end{align*}
+
+% $$L(y,\hat y)=L(y, f(w^l f(w^{l-1}\cdots f(w^2f(w^1x))\cdots)))$$
+
+By Chain Rule, the gradient of the loss function $L$ is given by
+% $$\frac{\partial L^{(1)}}{\partial w^{(l)}}=\frac{\partial z^{(l)}}{\partial w^{(l)}} \frac{\partial a^{(l)}}{\partial z^{(l)}} \frac{\partial L}{\partial a^{(l)}}=a^{(l-1)}f'({z}^{(l)})2(a^{(l)}-y)$$
+
+% $$L(x,y)=\frac1 2 \sum_{n=1}^N\left[y(x_n,w)-t_n \right]^2$$
+
+\begin{align*}
+\delta_{j}&=\frac{\partial L}{\partial a_{j}}\\&=\frac{\partial L}{\partial z_{j}} \cdot \frac{\partial z_{j}}{\partial a_{j}}\\&=\left[\sum_{k} \frac{\partial L}{\partial a_{k}} \frac{\partial a_{k}}{\partial z_{j}}\right] \cdot f^{\prime}\left(a_{j}\right)\\
+&=f^{\prime}\left(a_{j}\right) \sum_{k} w_{kj}\delta_k\\
+&=\left[1-\tanh^2(a_{j})\right] \sum_{k} w_{kj}\delta_k\\
+\end{align*}
+
+$\forall j\in[0,d]$ such that  $$\grad L_n = \left[\begin{array}{c}
+  \delta_1 \\
+  \vdots \\
+  \delta_d
+  \end{array}\right]$$
+
+\paragraph{2. (5 points) Max pooling: $f(x)=\max _{i \in\{1, \ldots, d\}} x_{i}$
+}
+\subparagraph{Answer: }
+
+General Case:
+
+\begin{align*}
+  a_k &= w_{kj}\cdot z_j + b_j\\
+  z_k &= f(a_k) = f(w_{kj}\cdot z_j + b_j)\\
+  L &\approx \frac{1}{2}\sum_{j=1}^{N}(a_j-y_j)^2
+\end{align*}
+
+Derivation gives:
+
+\begin{align*}
+  \pdv{L_n}{a_k} &= \delta_k\\
+  % \pdv{z_k}{w_k} &= a_{j}}\\
+  \pdv{a_k}{w_{kj}} &= z_{j}\\
+  \pdv{a_k}{z_j} &= w_{kj}
+\end{align*}
+
+Assuming $z_k=a_k^*=\max _{i \in\{1, \ldots, d\}} a_{i}=f(a_k)$.
+By Chain Rule, the gradient of the loss function $L$ is given by
+
+
+% $$\grad L_n = \left[\begin{array}{c}
+%   \delta_1 \\
+%   \vdots \\
+%   \delta_j\\
+%   \vdots \\
+%   \delta_d
+%   \end{array}\right]
+%   =\left[\begin{array}{c}
+%   0 \\
+%   \vdots \\
+%   \sum_{k} w_{kj}\delta_k\\
+%   \vdots \\
+%   0
+%   \end{array}\right]
+%   \text{\quad where }j=\text{argmax}\grad L_{n-1}
+%   $$
+
+$$\delta_{j}=\frac{\partial L}{\partial a_{j}}=\begin{cases}
+  0 \quad \text{if } k\neq j\\
+  \sum_{k} w_{kj}\delta_k \quad \text{if } k=j\\
+\end{cases}$$
+
+
+\paragraph{3. (5 points) Average pooling: $f(x)=\frac{1}{d} \sum_{i=1}^{d} x_{i}$}
+\subparagraph{Answer: }
+
+General Case:
+
+\begin{align*}
+  a_k &= w_{kj}\cdot z_j + b_j\\
+  z_k &= f(a_k) = f(w_{kj}\cdot z_j + b_j)\\
+  L &\approx \frac{1}{2}\sum_{j=1}^{N}(a_j-y_j)^2
+\end{align*}
+
+Derivation gives:
+
+\begin{align*}
+  \pdv{L_n}{a_k} &= \delta_k\\
+  % \pdv{z_k}{w_k} &= a_{j}}\\
+  \pdv{a_k}{w_{kj}} &= z_{j}\\
+  \pdv{a_k}{z_j} &= w_{kj}
+\end{align*}
+
+Since $f(x)=\frac{1}{d} \sum_{i=1}^{d} x_{i}$, then by Chain Rule, the gradient of the loss function $L$ is given by
+
+
+% $$\grad L_n = \left[\begin{array}{c}
+%   \delta_1 \\
+%   \vdots \\
+%   \delta_j\\
+%   \vdots \\
+%   \delta_d
+%   \end{array}\right]
+%   =\left[\begin{array}{c}
+%   0 \\
+%   \vdots \\
+%   \sum_{k} w_{kj}\delta_k\\
+%   \vdots \\
+%   0
+%   \end{array}\right]
+%   \text{\quad where }j=\text{argmax}\grad L_{n-1}
+%   $$
+
+$$\delta_{j}=\frac{\partial L}{\partial a_{j}}=\frac{1}{d}\sum_{k} w_{kj}\delta_k$$
+
+% \section*{Practicum}
+% See the accompanying Python notebook.
+
+% Question P1: Long-Short Term Memory Networks for sequence modeling ( 35 points)
+
+% Question P2: Ensemble of neural networks for multi-class classification (35 points)
 
 
 \end{document}
